@@ -7,13 +7,16 @@ package View;
 
 import Controller.Conexao;
 import Controller.ControleSalarios;
+import Controller.Tabela;
 import Model.ModeloSalario;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 
 /**
  *
@@ -27,7 +30,8 @@ public class Salarios extends javax.swing.JFrame {
      */
     public Salarios() {
             initComponents();
-              conBanco.conexao();
+            conBanco.conexao();
+            preencherTabela("SELECT * from salario");
           try {
               
               String sql ="Select * from estudo";
@@ -54,7 +58,7 @@ public class Salarios extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tabela = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         txtpq = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
@@ -69,10 +73,12 @@ public class Salarios extends javax.swing.JFrame {
         txtcod = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tabela.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -83,7 +89,7 @@ public class Salarios extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tabela);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -204,28 +210,46 @@ public class Salarios extends javax.swing.JFrame {
                 .addGap(23, 23, 23))
         );
 
+        jLabel7.setText("Cadastros do Salários");
+
+        jLabel8.setText("Todos os Salários");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(11, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 516, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(98, 98, 98)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel8)
+                .addGap(222, 222, 222))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(32, 32, 32)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addComponent(jLabel8))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addComponent(jLabel7)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(66, Short.MAX_VALUE))
+                .addContainerGap(49, Short.MAX_VALUE))
         );
 
-        pack();
+        setSize(new java.awt.Dimension(854, 564));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtpqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtpqActionPerformed
@@ -288,7 +312,37 @@ public class Salarios extends javax.swing.JFrame {
     private void txtcodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtcodActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtcodActionPerformed
-
+     public void preencherTabela(String sql){
+         ArrayList dados = new ArrayList();
+            String[] Colunas = new String[] {"Código","Nome" ,"Valor", "Data","Estudo","OBS"}; 
+            conBanco.executarpesquisa(sql);
+        try {
+            conBanco.rs.first();
+            do{
+                dados.add(new Object[]{conBanco.rs.getString("nome"),conBanco.rs.getInt("id_salario"),conBanco.rs.getString("valor"),conBanco.rs.getString("data"),conBanco.rs.getString("id_estudo"),conBanco.rs.getString("obs")});
+            }while(conBanco.rs.next());
+        } catch (SQLException ex) {
+         //   JOptionPane.showMessageDialog(null,"Erro no ArryList");
+        }
+            Tabela modelo= new Tabela(dados , Colunas);
+            tabela.setModel(modelo);
+            tabela.getColumnModel().getColumn(0).setPreferredWidth(75);
+            tabela.getColumnModel().getColumn(0).setResizable(false);
+            tabela.getColumnModel().getColumn(1).setPreferredWidth(75);
+            tabela.getColumnModel().getColumn(1).setResizable(false);
+            tabela.getColumnModel().getColumn(2).setPreferredWidth(80);
+            tabela.getColumnModel().getColumn(2).setResizable(false);
+            tabela.getColumnModel().getColumn(3).setPreferredWidth(80);
+            tabela.getColumnModel().getColumn(3).setResizable(false);
+            tabela.getColumnModel().getColumn(4).setPreferredWidth(70);
+            tabela.getColumnModel().getColumn(4).setResizable(false);
+            tabela.getColumnModel().getColumn(5).setPreferredWidth(130);
+            tabela.getColumnModel().getColumn(5).setResizable(false);
+            
+            tabela.getTableHeader().setReorderingAllowed(false);
+            tabela.setAutoResizeMode(tabela.AUTO_RESIZE_OFF);
+            tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    }
     /**
      * @param args the command line arguments
      */
@@ -333,9 +387,11 @@ public class Salarios extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tabela;
     private javax.swing.JTextField txtcod;
     private javax.swing.JTextField txtdata;
     private javax.swing.JTextField txtnome;

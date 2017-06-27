@@ -24,14 +24,24 @@ import javax.swing.ListSelectionModel;
  */
 public class Salarios extends javax.swing.JFrame {
       Conexao conBanco = new Conexao();
+        int flag =1;
       
     /**
      * Creates new form Salarios
      */
     public Salarios() {
             initComponents();
+            txtnome.setEnabled(false);
+            txtdata.setEnabled(false);
+            txtpq.setEnabled(false);
+            txtvalor.setEnabled(false);
+            comboestudo.setEnabled(false);
+            btndeletar.setEnabled(false);
+            btneditar.setEnabled(false);
+            btnsalvar.setEnabled(false);
+          
             conBanco.conexao();
-            preencherTabela("SELECT * from salario");
+            preencherTabela("select s.id_salario, s.data,s.valor, s.nome, s.obs, e.nomees from salario s inner join estudo e on s.id_estudo=e.id_estudo order by id_salario");
           try {
               
               String sql ="Select * from estudo";
@@ -39,7 +49,7 @@ public class Salarios extends javax.swing.JFrame {
               conBanco.rs.first();
               
               do{
-                   comboestudo.addItem(conBanco.rs.getString("nome"));
+                   comboestudo.addItem(conBanco.rs.getString("nomees"));
                    
                }while(conBanco.rs.next());
            } catch (SQLException ex) {
@@ -72,11 +82,16 @@ public class Salarios extends javax.swing.JFrame {
         txtnome = new javax.swing.JTextField();
         txtcod = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnsalvar = new javax.swing.JButton();
+        btndeletar = new javax.swing.JButton();
+        btnovo = new javax.swing.JButton();
+        btneditar = new javax.swing.JButton();
+        btnsair = new javax.swing.JButton();
+        btnpesquisa = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         tabela.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -99,7 +114,7 @@ public class Salarios extends javax.swing.JFrame {
             }
         });
 
-        jLabel5.setText("Observações:");
+        jLabel5.setText("OBS:");
 
         jLabel6.setText("Estudos:");
 
@@ -135,10 +150,45 @@ public class Salarios extends javax.swing.JFrame {
 
         jLabel4.setText("cod:");
 
-        jButton1.setText("Salvar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnsalvar.setText("Salvar");
+        btnsalvar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnsalvarActionPerformed(evt);
+            }
+        });
+
+        btndeletar.setText("Deletar");
+        btndeletar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btndeletarActionPerformed(evt);
+            }
+        });
+
+        btnovo.setText("Novo");
+        btnovo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnovoActionPerformed(evt);
+            }
+        });
+
+        btneditar.setText("Editar");
+        btneditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btneditarActionPerformed(evt);
+            }
+        });
+
+        btnsair.setText("Sair");
+        btnsair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnsairActionPerformed(evt);
+            }
+        });
+
+        btnpesquisa.setText("P");
+        btnpesquisa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnpesquisaActionPerformed(evt);
             }
         });
 
@@ -147,66 +197,85 @@ public class Salarios extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtdata, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtcod, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtnome, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnovo, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(9, 9, 9)
+                        .addComponent(btnsalvar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btneditar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btndeletar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnsair))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(33, 33, 33)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(comboestudo, javax.swing.GroupLayout.Alignment.TRAILING, 0, 183, Short.MAX_VALUE)
-                                .addComponent(txtpq, javax.swing.GroupLayout.Alignment.TRAILING))
-                            .addComponent(txtvalor, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(18, 18, 18)
+                                .addComponent(comboestudo, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtpq, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtvalor, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel2))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtnome, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+                                    .addComponent(txtdata, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtcod, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnpesquisa)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(104, 104, 104)
-                .addComponent(jButton1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(31, Short.MAX_VALUE)
+                .addContainerGap(40, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
                     .addComponent(txtcod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
+                    .addComponent(btnpesquisa))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(txtnome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(9, 9, 9)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(txtdata, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtdata, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(txtvalor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtvalor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(comboestudo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtpq, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addGap(26, 26, 26)
-                .addComponent(jButton1)
+                    .addComponent(jLabel5)
+                    .addComponent(txtpq, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(32, 32, 32)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnsalvar)
+                    .addComponent(btndeletar)
+                    .addComponent(btnovo)
+                    .addComponent(btneditar)
+                    .addComponent(btnsair))
                 .addGap(23, 23, 23))
         );
 
@@ -229,34 +298,27 @@ public class Salarios extends javax.swing.JFrame {
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel8)
-                .addGap(222, 222, 222))
+                .addGap(248, 248, 248))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel8))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addComponent(jLabel8))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addComponent(jLabel7)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(49, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(854, 564));
+        setSize(new java.awt.Dimension(937, 564));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtpqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtpqActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtpqActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnsalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsalvarActionPerformed
         int  resposta = JOptionPane.showConfirmDialog(null, "Deseja Salvar?" );
         if(resposta == 0){
             try {
@@ -265,15 +327,15 @@ public class Salarios extends javax.swing.JFrame {
                 conBanco.executarpesquisa(sql);
                 conBanco.rs.last();
                 float saldo = conBanco.rs.getFloat("valor");
-               // JOptionPane.showMessageDialog(null, saldo);
-            
+                // JOptionPane.showMessageDialog(null, saldo);
+
                 String sql2 = "Select * from saldo_total";
                 conBanco.executarpesquisa(sql2);
                 conBanco.rs.last();
-                
+
                 float saldototal = conBanco.rs.getFloat("valor");
                 float valor = Float.parseFloat(txtvalor.getText());
-              
+
                 String sql1 = "Select * from estudo where nome='"+comboestudo.getSelectedItem()+"'";
                 conBanco.executarpesquisa(sql1);
                 conBanco.rs.first();
@@ -284,34 +346,126 @@ public class Salarios extends javax.swing.JFrame {
                 mod.setData(txtdata.getText());
                 mod.setPq(txtpq.getText());
                 mod.setValor(Float.parseFloat(txtvalor.getText()));
-                
+
                 ControleSalarios con = new ControleSalarios();
                 con.inserir(mod);
                 con.inserirsaldo(mod);
                 con.inserirsaldo2(mod);
+                preencherTabela("select s.id_salario, s.data,s.valor, s.nome, s.obs, e.nomees from salario s inner join estudo e on s.id_estudo=e.id_estudo order by id_salario");
             } catch (SQLException ex) {
-               JOptionPane.showMessageDialog(null, "Erro no botão"+ex);
+                JOptionPane.showMessageDialog(null, "Erro no botão"+ex);
             }
-            
+
         }
-       
-    }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void txtvalorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtvalorActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtvalorActionPerformed
+    }//GEN-LAST:event_btnsalvarActionPerformed
 
-    private void txtdataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtdataActionPerformed
+    private void txtcodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtcodActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtdataActionPerformed
+    }//GEN-LAST:event_txtcodActionPerformed
 
     private void txtnomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtnomeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtnomeActionPerformed
 
-    private void txtcodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtcodActionPerformed
+    private void txtdataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtdataActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtcodActionPerformed
+    }//GEN-LAST:event_txtdataActionPerformed
+
+    private void txtvalorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtvalorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtvalorActionPerformed
+
+    private void txtpqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtpqActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtpqActionPerformed
+
+    private void btnsairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsairActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_btnsairActionPerformed
+
+    private void btnovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnovoActionPerformed
+        // TODO add your handling code here:
+            if(flag == 1){
+                txtnome.setEnabled(true);
+                txtdata.setEnabled(true);
+                txtpq.setEnabled(true);
+                txtvalor.setEnabled(true);
+                comboestudo.setEnabled(true);
+                btndeletar.setEnabled(false);
+                btneditar.setEnabled(false);
+                btnsalvar.setEnabled(true);
+                txtcod.setEnabled(false);
+                btnpesquisa.setEnabled(false);
+                btnovo.setText("Cancelar");
+                flag = 2;
+            } else if(flag == 2){
+                txtnome.setEnabled(false);
+                txtdata.setEnabled(false);
+                txtpq.setEnabled(false);
+                txtvalor.setEnabled(false);
+                comboestudo.setEnabled(false);
+                btndeletar.setEnabled(false);
+                btneditar.setEnabled(false);
+                btnsalvar.setEnabled(false);
+                txtcod.setEnabled(true);
+                btnpesquisa.setEnabled(true);
+                btnovo.setText("Novo");
+                flag = 1;
+              }
+    }//GEN-LAST:event_btnovoActionPerformed
+
+    private void btnpesquisaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnpesquisaActionPerformed
+          try {
+              // TODO add your handling code here:
+              String sql = "SELECT * from salario where id_salario='"+txtcod.getText()+"'";
+              conBanco.executarpesquisa(sql);
+              conBanco.rs.first();
+              txtnome.setText(conBanco.rs.getString("nome"));
+              txtdata.setText(conBanco.rs.getString("data"));
+              txtpq.setText(conBanco.rs.getString("obs"));
+              txtvalor.setText(String.valueOf(conBanco.rs.getFloat("valor")));
+              String sql1 = "Select * from estudo where id_estudo='"+ conBanco.rs.getString("id_estudo")+"'";
+              conBanco.executarpesquisa(sql1);
+              conBanco.rs.first();
+              comboestudo.setSelectedItem(conBanco.rs.getString("nomees"));
+              
+              txtnome.setEnabled(true);
+              txtdata.setEnabled(true);
+              txtpq.setEnabled(true);
+              txtvalor.setEnabled(true);
+              comboestudo.setEnabled(true);
+              btndeletar.setEnabled(true);
+              btneditar.setEnabled(true);
+              btnsalvar.setEnabled(false);
+              btnovo.setEnabled(false);
+              preencherTabela("select s.id_salario, s.data,s.valor, s.nome, s.obs, e.nomees from salario s inner join estudo e on s.id_estudo=e.id_estudo where id_salario='"+txtcod.getText()+"'");
+          } catch (SQLException ex) {
+             JOptionPane.showMessageDialog(null, "Erro no botão pesquisa:"+ex);
+          }
+        
+        
+        
+    }//GEN-LAST:event_btnpesquisaActionPerformed
+
+    private void btndeletarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btndeletarActionPerformed
+        // TODO add your handling code here:
+        ModeloSalario mod = new ModeloSalario();
+        
+       
+        mod.setId(Integer.parseInt(txtcod.getText()));
+       
+        ControleSalarios obj = new ControleSalarios();
+        obj.deletar(mod);
+        preencherTabela("select s.id_salario, s.data,s.valor, s.nome, s.obs, e.nomees from salario s inner join estudo e on s.id_estudo=e.id_estudo");
+    }//GEN-LAST:event_btndeletarActionPerformed
+
+    private void btneditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btneditarActionPerformed
+        // TODO add your handling code here:
+        
+        preencherTabela("select s.id_salario, s.data,s.valor, s.nome, s.obs, e.nomees from salario s inner join estudo e on s.id_estudo=e.id_estudo");
+    }//GEN-LAST:event_btneditarActionPerformed
      public void preencherTabela(String sql){
          ArrayList dados = new ArrayList();
             String[] Colunas = new String[] {"Código","Nome" ,"Valor", "Data","Estudo","OBS"}; 
@@ -319,7 +473,7 @@ public class Salarios extends javax.swing.JFrame {
         try {
             conBanco.rs.first();
             do{
-                dados.add(new Object[]{conBanco.rs.getString("nome"),conBanco.rs.getInt("id_salario"),conBanco.rs.getString("valor"),conBanco.rs.getString("data"),conBanco.rs.getString("id_estudo"),conBanco.rs.getString("obs")});
+                dados.add(new Object[]{conBanco.rs.getInt("id_salario"),conBanco.rs.getString("nome"),conBanco.rs.getString("valor"),conBanco.rs.getString("data"),conBanco.rs.getString("nomees"),conBanco.rs.getString("obs")});
             }while(conBanco.rs.next());
         } catch (SQLException ex) {
          //   JOptionPane.showMessageDialog(null,"Erro no ArryList");
@@ -334,9 +488,9 @@ public class Salarios extends javax.swing.JFrame {
             tabela.getColumnModel().getColumn(2).setResizable(false);
             tabela.getColumnModel().getColumn(3).setPreferredWidth(80);
             tabela.getColumnModel().getColumn(3).setResizable(false);
-            tabela.getColumnModel().getColumn(4).setPreferredWidth(70);
+            tabela.getColumnModel().getColumn(4).setPreferredWidth(130);
             tabela.getColumnModel().getColumn(4).setResizable(false);
-            tabela.getColumnModel().getColumn(5).setPreferredWidth(130);
+            tabela.getColumnModel().getColumn(5).setPreferredWidth(70);
             tabela.getColumnModel().getColumn(5).setResizable(false);
             
             tabela.getTableHeader().setReorderingAllowed(false);
@@ -379,8 +533,13 @@ public class Salarios extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btndeletar;
+    private javax.swing.JButton btneditar;
+    private javax.swing.JButton btnovo;
+    private javax.swing.JButton btnpesquisa;
+    private javax.swing.JButton btnsair;
+    private javax.swing.JButton btnsalvar;
     private javax.swing.JComboBox<String> comboestudo;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

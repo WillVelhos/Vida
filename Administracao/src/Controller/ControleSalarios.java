@@ -59,23 +59,23 @@ public class ControleSalarios {
         
     }
     
-   /* public void deletar(ModeloSalario obj){
+    public void deletar(ModeloSalario obj){
         try {
             conbanco.conexao();
             
-            String sql = "Delete from fretes where id_frete=?";
+            String sql = "Delete from salario where id_salario=?";
             PreparedStatement pst = conbanco.conn.prepareStatement(sql);
-            pst.setInt(1,obj.getIdfrete());
+            pst.setInt(1,obj.getId());
             pst.execute();
-            JOptionPane.showMessageDialog(null,"Deltado com sucesso!");
+            JOptionPane.showMessageDialog(null,"Deletado com sucesso!");
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null,"Erro no comando deletar:"+ ex);
-        }*/
-        
-        
+        }
+    }
+}    
         
     
-    public void alterar(ModeloSalario obj){
+   /* public void alterar(ModeloSalario obj){
          conbanco.conexao();
         try {
             
@@ -96,4 +96,4 @@ public class ControleSalarios {
      
         
   }
-}
+}*/
